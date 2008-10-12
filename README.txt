@@ -1,3 +1,3 @@
-= dm-is-example
+= dm-is-taggable
 
-Description of plugin. What it does, and how.
+Remaking of the original dm-is-taggable
