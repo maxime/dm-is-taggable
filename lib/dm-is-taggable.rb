@@ -6,10 +6,12 @@ require 'pathname'
 gem 'dm-core', '=0.9.7'
 require 'dm-core'
 
+require 'dm-is-remixable'
+
 # Require plugin-files
 require Pathname(__FILE__).dirname.expand_path / 'dm-is-taggable' / 'is' / 'taggable.rb'
-
-require 'dm-is-remixable'
+require Pathname(__FILE__).dirname.expand_path / 'dm-is-taggable' / 'is' / 'tag.rb'
+require Pathname(__FILE__).dirname.expand_path / 'dm-is-taggable' / 'is' / 'tagging.rb'
 
 # Include the plugin in Resource
 module DataMapper
