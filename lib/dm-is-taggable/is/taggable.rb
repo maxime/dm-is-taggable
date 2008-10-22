@@ -23,6 +23,8 @@ module DataMapper
         # Add instance-methods
         include DataMapper::Is::Taggable::InstanceMethods
         
+        # Make the magic happen
+        
         class_eval <<-RUBY
           remix n, :taggings
 
@@ -31,7 +33,12 @@ module DataMapper
             belongs_to :tag
           end
           
-          has n, :tags, :through => :post_tags
+          has n, :tags, :through => :#{self.storage_name.singular}_tags
+        RUBY
+        
+        Tag.class_eval <<-RUBY
+          has n, :#{self.storage_name.singular}_tags
+          has n, :#{self.storage_name}, :through => :#{self.storage_name.singular}_tags
         RUBY
       end
 
@@ -42,10 +49,15 @@ module DataMapper
       end # ClassMethods
 
       module InstanceMethods
-        def tag(with_tag)
-          p = PostTag.new(:tag => with_tag)
+        def tag(tag_name)
+          p = PostTag.new(:tag => tag_name)
           self.post_tags << p
           p.save unless self.new_record?
+        end
+        
+        def untag(tag_name)
+          p = self.post_tags.first(:tag_id => tag_name.id)
+          p.destroy if p
         end
       end # InstanceMethods
 
