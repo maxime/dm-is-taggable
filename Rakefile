@@ -4,21 +4,21 @@ require 'spec/rake/spectask'
 require 'pathname'
 
 ROOT = Pathname(__FILE__).dirname.expand_path
-require ROOT + 'lib/dm-is-example/is/version'
+require ROOT + 'lib/dm-is-taggable/is/version'
 
 AUTHOR = "John Doe"
 EMAIL  = "john [a] doe [d] com"
-GEM_NAME = "dm-is-example"
-GEM_VERSION = DataMapper::Is::Example::VERSION
-GEM_DEPENDENCIES = [["dm-core", GEM_VERSION], ["dm-is-remixable", GEM_VERSION]]
+GEM_NAME = "dm-is-taggable"
+GEM_VERSION = DataMapper::Is::Taggable::VERSION
+GEM_DEPENDENCIES = [["dm-core", GEM_VERSION]]
 GEM_CLEAN = ["log", "pkg"]
 GEM_EXTRAS = { :has_rdoc => true, :extra_rdoc_files => %w[ README.txt LICENSE TODO ] }
 
 PROJECT_NAME = "datamapper"
-PROJECT_URL  = "http://github.com/sam/dm-more/tree/master/dm-is-example"
-PROJECT_DESCRIPTION = PROJECT_SUMMARY = "Example of a DataMapper plugin"
+PROJECT_URL  = "http://github.com/sam/dm-more/tree/master/dm-is-taggable"
+PROJECT_DESCRIPTION = PROJECT_SUMMARY = "Taggable of a DataMapper plugin"
 
-require ROOT.parent + 'tasks/hoe'
+require 'tasks/hoe'
 
 task :default => [ :spec ]
 
