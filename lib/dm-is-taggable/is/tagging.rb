@@ -1,7 +1,8 @@
 module Tagging
   include DataMapper::Resource
   
-  property :tag_id, Integer, :nullable => false, :key => true
+  property :id, Serial
+  property :tag_id, Integer, :nullable => false
   
   is :remixable, :suffix => "tag"
 end

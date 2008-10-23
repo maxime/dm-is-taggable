@@ -8,6 +8,13 @@ class Post
   is :taggable
 end
 
+class User
+  include DataMapper::Resource
+    
+  property :id, Serial
+  property :login, String
+end
+
 class Book
   include DataMapper::Resource
   

@@ -7,6 +7,14 @@ describe 'DataMapper::Is::Taggable' do
     @post = Post.create(:name => "My First Post")
     @blue = Tag.build('blue')
     @yellow = Tag.build('yellow')
+    
+    Book.all.destroy!
+    @book = Book.create(:title => "Wonderful world", :isbn => "1234567890123", :author => "Awesome author")
+    @fiction = Tag.build('fiction')
+    @english = Tag.build('english')
+    
+    User.all.destroy!
+    @bob = User.create(:login => 'bob')
   end
   
   it "should add a taggable? method that return true" do
@@ -24,8 +32,7 @@ describe 'DataMapper::Is::Taggable' do
   end
   
   # Post tagging
-  
-  it "should be able to tag an object" do
+  it "should be able to tag a post" do
     @post.tag(@blue)
     @post.tags.reload
     @post.tags.should have(1).thing
@@ -39,7 +46,7 @@ describe 'DataMapper::Is::Taggable' do
   end
   
   # Get post from tags
-  it "should be able to get objects tagged with a tag" do
+  it "should be able to get posts tagged with a tag" do
     @yellow.posts.should have(1).thing
     @yellow.posts.first.should == @post
 
@@ -48,12 +55,71 @@ describe 'DataMapper::Is::Taggable' do
   end
   
   # Post Untagging
-  it "should be able to untag" do
+  it "should be able to untag a post" do
     @post.untag(@blue)
     @post.tags.reload
     @post.tags.should_not include(@blue)
     
     @blue.posts.reload
     @blue.posts.should be_empty
+  end
+  
+  # Book tagging
+  it "should be able to tag a book without tagger" do
+    @book.tag(@fiction)
+    @book.tags.reload
+    @book.tags.should have(1).thing
+    @book.tags.should include(@fiction)
+    
+    @book.tag(@english)
+    @book.tags.reload
+    @book.tags.should have(2).things
+    @book.tags.should include(@fiction)
+    @book.tags.should include(@english)    
+  end
+  
+  # Get books from tags
+  it "should be able to get books tagged with a tag" do
+    @english.books.should have(1).thing
+    @english.books.first.should == @book
+
+    @fiction.books.should have(1).thing
+    @fiction.books.first.should == @book
+  end
+  
+  # Book Untagging
+  it "should be able to untag a book" do
+    @book.untag(@english)
+    @book.tags.reload
+    @book.tags.should_not include(@english)
+    @book.tags.should include(@fiction)
+    
+    @english.posts.reload
+    @english.posts.should be_empty
+  end
+    
+  it "should provide a method for listing the books tagged by bob" do
+    @bob.books.should be_empty
+  end
+
+  it "bob user should be able to tag a book as a tagger" do
+    @scifi = Tag.build('scifi')
+    @bob.tag(@book, :with => @scifi)
+    
+    @bob.books.reload
+    @bob.books.should have(1).thing
+    @bob.books.should include(@book)
+    
+    @scifi.books.should have(1).thing
+    @scifi.books.should include(@book)
+    
+    @book.tags.reload
+    @book.tags.should have(2).thing
+    @book.tags.should include(@scifi) # tagged by bob
+    @book.tags.should include(@fiction) # without taggers
+  end
+  
+  it "User should be tagger" do
+    User.should be_tagger
   end
 end
