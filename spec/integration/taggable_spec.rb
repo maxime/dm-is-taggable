@@ -31,6 +31,24 @@ describe 'DataMapper::Is::Taggable' do
     @post.tags.should be_empty
   end
   
+  it "should add a tag_list method for getting the tag list" do
+    @post.tags_list.should == ""
+    
+    @post.tag(@blue)
+    @post.reload
+    @post.tags_list.should == "blue"
+    
+    @post.tag(@yellow)
+    @post.reload
+    @post.tags_list.should == "blue, yellow"
+    
+    @post.untag(@blue)
+    @post.untag(@yellow)
+    
+    @post.reload
+    @post.tags_list.should == ""
+  end
+  
   # Post tagging
   it "should be able to tag a post" do
     @post.tag(@blue)
@@ -121,5 +139,17 @@ describe 'DataMapper::Is::Taggable' do
   
   it "User should be tagger" do
     User.should be_tagger
+  end
+  
+  it "should be able to tag a book with the tags_list= helper" do
+    @book.tags_list = ""
+    @book.tags.reload
+    @book.tags.should be_empty
+    
+    @book.tags_list = "orange, red"
+    @book.tags.reload
+    @book.tags.should have(2).things
+    @book.tags.should include(Tag.build('orange'))
+    @book.tags.should include(Tag.build('red'))    
   end
 end

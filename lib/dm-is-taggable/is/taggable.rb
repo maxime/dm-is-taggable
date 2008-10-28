@@ -26,21 +26,26 @@ module DataMapper
         # Make the magic happen
         options[:by] ||= []
         
+        taggers_associations = ""
+        options[:by].each do |tagger_class|
+          taggers_associations << "belongs_to :#{Extlib::Inflection.underscore(tagger_class.to_s)}\n"
+        end
+        
         class_eval <<-RUBY
           remix n, :taggings
 
           enhance :taggings do
             belongs_to :tag
           
-            #{s = ''; options[:by].each {|tagger_class| s << "belongs_to :#{tagger_class.storage_name.singular}\n" }; s}
+            #{taggers_associations}
           end
           
-          has n, :tags, :through => :#{self.storage_name.singular}_tags
+          has n, :tags, :through => :#{Extlib::Inflection.underscore(self.to_s)}_tags
         RUBY
         
         Tag.class_eval <<-RUBY
-          has n, :#{self.storage_name.singular}_tags
-          has n, :#{self.storage_name}, :through => :#{self.storage_name.singular}_tags
+          has n, :#{Extlib::Inflection.underscore(self.to_s)}_tags
+          has n, :#{self.storage_name}, :through => :#{Extlib::Inflection.underscore(self.to_s)}_tags
         RUBY
         
         options[:by].each do |tagger_class|
@@ -66,6 +71,18 @@ module DataMapper
         def untag(tag_name)
           p = self.send("#{Extlib::Inflection::underscore(self.class.to_s)}_tags").first(:tag_id => tag_name.id)
           p.destroy if p
+        end
+        
+        def tags_list
+          self.tags.collect {|t| t.name}.join(", ")
+        end
+        
+        def tags_list=(list)
+          self.send("#{Extlib::Inflection::underscore(self.class.to_s)}_tags").destroy!
+          list = list.split(",").collect {|s| s.strip}
+          list.each do |t|
+            self.tag(Tag.build(t))
+          end
         end
       end # InstanceMethods
 
