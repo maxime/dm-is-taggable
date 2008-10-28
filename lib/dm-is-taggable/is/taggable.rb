@@ -36,7 +36,7 @@ module DataMapper
 
           enhance :taggings do
             belongs_to :tag
-          
+            belongs_to :#{Extlib::Inflection.underscore(self.to_s)}
             #{taggers_associations}
           end
           
@@ -58,6 +58,18 @@ module DataMapper
       module ClassMethods
         def taggable?
           true
+        end
+        
+        def tagged_with(tags)
+          # tags can be an object or an array
+          tags = [tags] unless tags.class == Array
+          
+          # Transform Strings to Tags if necessary
+          tags.collect!{|t| t.class == Tag ? t : Tag.build(t)}
+          
+          # Query the objects tagged with those tags
+          taggings = Extlib::Inflection::constantize("#{self.to_s}Tag").all(:tag_id.in => tags.collect{|t| t.id})
+          taggings.collect{|tagging| tagging.send(Extlib::Inflection::underscore(self.to_s)) }
         end
       end # ClassMethods
 

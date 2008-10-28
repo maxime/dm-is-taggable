@@ -164,4 +164,14 @@ describe 'DataMapper::Is::Taggable' do
       new_book.tags.should include(Tag.build(tag))
     end
   end
+  
+  it "should be able to get the books tagged with a specific tag" do
+    Book.tagged_with('orange').should have(1).thing
+    Book.tagged_with('orange').should include(@book)
+    
+    Post.tagged_with('blue').should have(0).thing    
+    Post.tagged_with('yellow').should have(1).thing
+    Post.tagged_with([@yellow, @blue]).should have(1).thing    
+    Post.tagged_with(['yellow', 'blue']).should include(@post)   
+  end
 end
