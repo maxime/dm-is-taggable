@@ -78,11 +78,13 @@ module DataMapper
         end
         
         def tags_list=(list)
-          self.send("#{Extlib::Inflection::underscore(self.class.to_s)}_tags").destroy!
+          self.send("#{Extlib::Inflection::underscore(self.class.to_s)}_tags").destroy! unless new_record?
+          
+          # Tag list generation
           list = list.split(",").collect {|s| s.strip}
-          list.each do |t|
-            self.tag(Tag.build(t))
-          end
+          
+          # Do the tagging here
+          list.each { |t| self.tag(Tag.build(t)) }
         end
       end # InstanceMethods
 

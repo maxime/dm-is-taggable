@@ -152,4 +152,16 @@ describe 'DataMapper::Is::Taggable' do
     @book.tags.should include(Tag.build('orange'))
     @book.tags.should include(Tag.build('red'))    
   end
+  
+  it "should be able to tag a newly created object with tags_list=" do
+    new_book = Book.new(:title => "Awesome world", :isbn => "1234567890124", :author => "Wonderful author")
+    new_book.tags_list = "new, awesome, book"
+    new_book.save
+    
+    new_book.reload
+    new_book.tags.should have(3).things
+    ['new', 'awesome', 'book'].each do |tag|
+      new_book.tags.should include(Tag.build(tag))
+    end
+  end
 end
