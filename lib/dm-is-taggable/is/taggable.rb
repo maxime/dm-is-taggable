@@ -62,15 +62,28 @@ module DataMapper
       end # ClassMethods
 
       module InstanceMethods
-        def tag(tag_name)
-          p = Extlib::Inflection::constantize("#{self.class.to_s}Tag").new(:tag => tag_name)
-          self.send("#{Extlib::Inflection::underscore(self.class.to_s)}_tags") << p
-          p.save unless self.new_record?
+        def tag(tags)
+          tags = [tags] unless tags.class == Array
+          
+          tags.each do |tag_name|
+            tag_name = Tag.build(tag_name) if tag_name.class == String
+            next if self.send("#{Extlib::Inflection::underscore(self.class.to_s)}_tags").first(:tag_id => tag_name.id)
+            
+            p = Extlib::Inflection::constantize("#{self.class.to_s}Tag").new(:tag => tag_name)
+            self.send("#{Extlib::Inflection::underscore(self.class.to_s)}_tags") << p
+            p.save unless self.new_record?
+          end
         end
         
-        def untag(tag_name)
-          p = self.send("#{Extlib::Inflection::underscore(self.class.to_s)}_tags").first(:tag_id => tag_name.id)
-          p.destroy if p
+        def untag(tags)
+          tags = [tags] unless tags.class == Array
+          
+          tags.each do |tag_name|
+            tag_name = Tag.build(tag_name) if tag_name.class == String
+
+            p = self.send("#{Extlib::Inflection::underscore(self.class.to_s)}_tags").first(:tag_id => tag_name.id)
+            p.destroy if p
+          end
         end
         
         def tags_list

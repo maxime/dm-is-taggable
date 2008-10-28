@@ -51,12 +51,12 @@ describe 'DataMapper::Is::Taggable' do
   
   # Post tagging
   it "should be able to tag a post" do
-    @post.tag(@blue)
+    @post.tag('blue')
     @post.tags.reload
     @post.tags.should have(1).thing
     @post.tags.should include(@blue)
     
-    @post.tag(@yellow)
+    @post.tag(['yellow', @blue])
     @post.tags.reload
     @post.tags.should have(2).things
     @post.tags.should include(@blue)
