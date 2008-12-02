@@ -5,11 +5,14 @@ README.txt
 Rakefile
 TODO
 lib/dm-is-taggable.rb
-lib/dm-is-taggable/is/taggable.rb
 lib/dm-is-taggable/is/tag.rb
+lib/dm-is-taggable/is/taggable.rb
 lib/dm-is-taggable/is/tagger.rb
 lib/dm-is-taggable/is/tagging.rb
 lib/dm-is-taggable/is/version.rb
+spec/classes.rb
+spec/integration/tag_spec.rb
 spec/integration/taggable_spec.rb
 spec/spec.opts
 spec/spec_helper.rb
+tasks/hoe.rb

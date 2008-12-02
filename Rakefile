@@ -6,16 +6,16 @@ require 'pathname'
 ROOT = Pathname(__FILE__).dirname.expand_path
 require ROOT + 'lib/dm-is-taggable/is/version'
 
-AUTHOR = "John Doe"
-EMAIL  = "john [a] doe [d] com"
+AUTHOR = "Maxime Guilbot"
+EMAIL  = "maxime [a] ekohe [d] com"
 GEM_NAME = "dm-is-taggable"
 GEM_VERSION = DataMapper::Is::Taggable::VERSION
-GEM_DEPENDENCIES = [["dm-core", GEM_VERSION]]
+GEM_DEPENDENCIES = [["dm-core", GEM_VERSION], ["dm-is-remixable", GEM_VERSION]]
 GEM_CLEAN = ["log", "pkg"]
 GEM_EXTRAS = { :has_rdoc => true, :extra_rdoc_files => %w[ README.txt LICENSE TODO ] }
 
-PROJECT_NAME = "datamapper"
-PROJECT_URL  = "http://github.com/sam/dm-more/tree/master/dm-is-taggable"
+PROJECT_NAME = "dm-is-taggable"
+PROJECT_URL  = "http://github.com/maxime/dm-is-taggable/wikis"
 PROJECT_DESCRIPTION = PROJECT_SUMMARY = "Taggable of a DataMapper plugin"
 
 require 'tasks/hoe'

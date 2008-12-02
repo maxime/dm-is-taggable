@@ -154,8 +154,7 @@ describe 'DataMapper::Is::Taggable' do
   end
   
   it "should be able to tag a newly created object with tags_list=" do
-    new_book = Book.new(:title => "Awesome world", :isbn => "1234567890124", :author => "Wonderful author")
-    new_book.tags_list = "new, awesome, book"
+    new_book = Book.new(:title => "Awesome world", :isbn => "1234567890124", :author => "Wonderful author", :tags_list => "new, awesome, book")
     new_book.save
     
     new_book.reload

@@ -45,7 +45,7 @@ module DataMapper
         
         Tag.class_eval <<-RUBY
           has n, :#{Extlib::Inflection.underscore(self.to_s)}_tags
-          has n, :#{self.storage_name}, :through => :#{Extlib::Inflection.underscore(self.to_s)}_tags
+          has n, :#{Extlib::Inflection.underscore(self.to_s).pluralize}, :through => :#{Extlib::Inflection.underscore(self.to_s)}_tags
         RUBY
         
         options[:by].each do |tagger_class|
@@ -99,11 +99,12 @@ module DataMapper
         end
         
         def tags_list
-          self.tags.collect {|t| t.name}.join(", ")
+          @tags_list || self.tags.collect {|t| t.name}.join(", ")
         end
         
         def tags_list=(list)
-          self.send("#{Extlib::Inflection::underscore(self.class.to_s)}_tags").destroy! unless new_record?
+          @tags_list = list
+          self.tags.each {|t| self.untag(t) }
           
           # Tag list generation
           list = list.split(",").collect {|s| s.strip}
