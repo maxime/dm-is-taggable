@@ -79,7 +79,7 @@ module DataMapper
           
           tags.each do |tag_name|
             tag_name = Tag.build(tag_name) if tag_name.class == String
-            next if self.send("#{Extlib::Inflection::underscore(self.class.to_s)}_tags").first(:tag_id => tag_name.id)
+            next if self.send("#{Extlib::Inflection::underscore(self.class.to_s)}_tags").first(:tag_id => tag_name.id, "#{Extlib::Inflection::underscore(self.class.to_s)}_id".intern => self.id)
             
             p = Extlib::Inflection::constantize("#{self.class.to_s}Tag").new(:tag => tag_name)
             self.send("#{Extlib::Inflection::underscore(self.class.to_s)}_tags") << p

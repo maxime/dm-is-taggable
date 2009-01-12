@@ -10,6 +10,7 @@ describe 'DataMapper::Is::Taggable' do
     
     Book.all.destroy!
     @book = Book.create(:title => "Wonderful world", :isbn => "1234567890123", :author => "Awesome author")
+    @second_book = Book.create(:title => "Beautiful world", :isbn => "1234567891123", :author => "Beautiful author")
     @fiction = Tag.build('fiction')
     @english = Tag.build('english')
     
@@ -94,6 +95,18 @@ describe 'DataMapper::Is::Taggable' do
     @book.tags.should have(2).things
     @book.tags.should include(@fiction)
     @book.tags.should include(@english)    
+  end
+  
+  it "should be able to tag another book with the same tag" do
+    @second_book.tag(@fiction)
+    @second_book.reload
+    @second_book.tags.should have(1).thing
+    @second_book.tags.should include(@fiction)
+    
+    @fiction.books.should include(@second_book)
+    
+    @second_book.untag(@fiction)
+    @fiction.reload
   end
   
   # Get books from tags
